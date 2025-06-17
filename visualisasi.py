@@ -8,7 +8,7 @@ import numpy as np
 # --- Streamlit Page Configuration ---
 st.set_page_config(layout="wide", page_title="Dashboard Kepuasan Penumpang")
 
-# --- Data Loading and Preprocessing ---
+# --- Data Loading dan Preprocessing ---
 @st.cache_data
 def load_data():
     df = pd.read_csv('train.csv')
@@ -22,7 +22,7 @@ def load_data():
 
 df = load_data()
 
-# --- Initialize Session State for Filters ---
+# --- inisialisasi sesi ---
 if 'age_range' not in st.session_state:
     st.session_state.age_range = (int(df['Age'].min()), int(df['Age'].max()))
 if 'selected_class' not in st.session_state:
@@ -33,15 +33,15 @@ if 'selected_service_feature' not in st.session_state:
     st.session_state.selected_service_feature = 'None'
 
 
-# --- Streamlit App Header ---
+# --- Header ---
 st.title("Dashboard Interaktif Kepuasan Penumpang Maskapai")
 
 st.markdown("""
 Aplikasi ini memungkinkan anda untuk melihat faktor-faktor yang mempengaruhi kepuasan penumpang maskapai penerbangan secara interaktif.
-Gunakan slider dan dropdown menu di sidebar untuk memfilter dan memvisualisasikan data. Perhatikan bagaimana perubahan filter tidak me-reload seluruh halaman.
+Gunakan slider dan dropdown menu di sidebar untuk memfilter dan memvisualisasikan data.
 """)
 
-# --- Sidebar for Global Filters ---
+# --- sidebar---
 st.sidebar.header("Pengaturan Filter Data")
 
 # Filter 1: Rentang Usia
@@ -81,9 +81,8 @@ if filtered_df.empty:
     st.warning("Tidak ada data yang tersedia untuk kombinasi filter yang dipilih. Silakan sesuaikan filter Anda.")
     st.stop()
 
-# --- Interactive Plot 1: Age Distribution by Satisfaction ---
+# --- Plot 1 ---
 st.header("Distribusi Usia Penumpang Berdasarkan Kepuasan")
-st.write("Distribusi usia penumpang berdasarkan tingkat kepuasan, disesuaikan dengan filter yang dipilih.")
 
 satisfied_ages = filtered_df[filtered_df['Satisfaction_encoded'] == 1]['Age']
 dissatisfied_ages = filtered_df[filtered_df['Satisfaction_encoded'] == 0]['Age']
@@ -118,9 +117,8 @@ st.bokeh_chart(p_age, use_container_width=True)
 
 st.markdown("---")
 
-# --- Interactive Plot 2: Satisfaction by Filtered Class ---
+# --- IPlot 2 ---
 st.header("Kepuasan Penumpang Berdasarkan Filter Pilihan")
-st.write("Lihat persentase kepuasan dan ketidakpuasan untuk kombinasi filter yang dipilih.")
 
 satisfaction_counts_class_filtered = filtered_df['Satisfaction'].value_counts().reindex(['dissatisfied', 'satisfied'], fill_value=0)
 total_passengers_filtered = satisfaction_counts_class_filtered.sum()
@@ -157,9 +155,8 @@ st.bokeh_chart(p_class_filtered, use_container_width=True)
 
 st.markdown("---")
 
-# --- Interactive Plot 3: Correlation of Service Features with Satisfaction ---
+# --- PLot 3---
 st.header("Korelasi Fitur Layanan dengan Kepuasan")
-st.write("Lihat bagaimana korelasi fitur layanan dengan kepuasan berubah berdasarkan filter yang diterapkan.")
 
 service_cols = ['Inflight wifi service', 'Ease of Online booking',
                 'Food and drink', 'Online boarding', 'Seat comfort',
